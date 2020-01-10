@@ -115,5 +115,3 @@ while running:
     Cloud().show()
     all_sprites.draw(screen)
     pygame.display.flip()
-
-# while pygame.event.wait().type != pygame.QUIT:
