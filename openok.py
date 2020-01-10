@@ -1,10 +1,18 @@
-import os, pygame, random
+import os
+import pygame
+import random
+
 width, height = 500, 600
 screen = pygame.display.set_mode((width, height))
 running = True
 FPS = 60
-all_speeds = [random.randrange(2, 5) for i in range(8)]
+
+numb_of_clouds = 8
+live = True
+change_of_height = 0
+all_speeds = [random.randrange(2, 5) for i in range(numb_of_clouds)]
 koords = [[0, 0], [125, 50], [60, 120], [430, 500], [300, 300], [530, 500], [100, 500], [250, 470]]
+
 clock = pygame.time.Clock()
 
 
@@ -14,7 +22,7 @@ class Cloud:
 
     def show(self):
         for koor in koords:
-            screen.blit(oblako, tuple(koor))
+            screen.blit(cloud, tuple(koor))
             if koor[1] <= self.height:
                 a = koor[1] + all_speeds[koords.index(koor)]
                 koor[1] = a
@@ -30,8 +38,6 @@ class Platforms(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = random.randrange(width - self.rect.width)
         self.rect.y = random.randrange(-100, -40)
-        # self.speedy = random.randrange(1, 8)
-        # self.speedx = random.randrange(-3, 3)
         self.speedy = random.randrange(1, 4)
         self.speedx = 0
 
@@ -78,7 +84,7 @@ class Player(pygame.sprite.Sprite):
 
 
 def load_image(name, colorkey=None):
-    fullname = os.path.join('obl', name)
+    fullname = os.path.join('pictures', name)
     image = pygame.image.load(fullname).convert()
     if colorkey is not None:
         if colorkey == -1:
@@ -89,7 +95,7 @@ def load_image(name, colorkey=None):
     return image
 
 
-oblako = pygame.transform.scale(load_image('cloud1.png', -1), (100, 30))
+cloud = pygame.transform.scale(load_image('cloud.png', -1), (100, 30))
 player = Player()
 bullets = pygame.sprite.Group()
 all_sprites = pygame.sprite.Group()
@@ -99,7 +105,6 @@ for i in range(4):
     p = Platforms()
     all_sprites.add(p)
     mobs.add(p)
-
 
 while running:
     clock.tick(FPS)
