@@ -1,17 +1,18 @@
 import pygame
 import os
 import sys
+import random
 from Background import Background
 from Platforms import Platforms, Land
 from Wings import Wings
 from Doodle import Doodle
+from cloud import Cloud
+from constans import size, record_height, dood_widt, dood_heigh, FPS, v, jump_time, jump, clock
+from constans import land_height, numb_of_clouds, live, change_of_height, all_speeds, cloud_koords
 
 pygame.init()
-size = width, height = 500, 600
 screen = pygame.display.set_mode(size)
 screen.fill((255, 255, 255))
-
-clock = pygame.time.Clock()
 
 
 def load_image(name, colorkey=None):
@@ -26,8 +27,6 @@ def load_image(name, colorkey=None):
     return image
 
 
-# высший результат всех игр
-record_height = 'record'
 # главный герой
 doodle = pygame.transform.scale(load_image('doodle.png', -1), (510, 340))
 # прыгающий doodle
@@ -48,21 +47,21 @@ platf2 = pygame.transform.scale(load_image('platf2.png', -1), (90, 60))
 platf_tr = pygame.transform.scale(load_image('platf_tr.png', -1), (90, 60))
 # сломанная платформа из дерева
 platf_br = pygame.transform.scale(load_image('platf_br.png', -1), (90, 60))
-earth = load_image('land.png', -1)  # земля
+# земля
+earth = load_image('land.png', -1)
 
-doodle_size = dood_widt, dood_heigh = 90, 60
 main = Doodle()
 back = Background()
 plate = Platforms()
 land = Land()
 platforms = [land]
 monsters = []
-land_height = 540
 
-FPS = 60
-v = 3
-jump_time = 0
-jump = 0
+bullets = pygame.sprite.Group()
+all_sprites = pygame.sprite.Group()
+mobs = pygame.sprite.Group()
+run = True
+play = True
 
 
 def start_pictures(fon, text, record=-5, font_num=20):
@@ -92,7 +91,7 @@ def terminate():
 
 
 def start_screen():
-    global doodle
+    global doodle, run
     intro_text = ["Нажимая клавиши 'вправо', 'влево',",
                   "перемещайте героя на платформы.",
                   "Избегайте монстров и старайтесь не падать.",
@@ -103,30 +102,25 @@ def start_screen():
         record = int(f.read())
     fon = pygame.transform.scale(load_image('fon.jpg'), size)
 
-    run = True
     time_picture = 0
     start = False
     while run:
-        ev = None
-        for event in pygame.event.get():
-            ev = None
-            if event.type == pygame.QUIT:
-                run = False
-                terminate()
-            elif event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
-                if start is False:
+        if start is False:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    run = False
+                    terminate()
+                elif event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
                     doodle = pygame.transform.scale(load_image('doodle.png', -1), (90, 60))
                     start = True
-                ev = event
-        if start:
-            the_game(time_picture, ev)  # начинаем игру
-        else:
             if int(time_picture % 2) == 0:
                 start_pictures(fon, intro_text, record)
                 screen.blit(doodle, (-20, 170))
             else:
                 start_pictures(fon, intro_text, record)
                 screen.blit(doodle_jump, (-20, 170))
+        else:
+            playing(time_picture)
         time_picture += v / FPS
         pygame.display.flip()
         clock.tick(FPS)
@@ -145,18 +139,18 @@ def collis(main_pos):
     main_x, main_y = main_pos
     touch = False
     for i in platforms:
-        if main_x + dood_widt >= i.get_pos()[0] and\
-                (main_y + dood_heigh <= i.get_pos()[1] or main_y <= i.get_pos()[1] + i.get_heigh()) or\
-                (main_x <= i.get_pos()[0] + i.get_width()) and\
+        if main_x + dood_widt >= i.get_pos()[0] and \
+                ((main_y + dood_heigh <= i.get_pos()[1] or main_y <= i.get_pos()[1] + i.get_heigh()) or \
+                 (main_x <= i.get_pos()[0] + i.get_width())) and \
                 (main_y + dood_heigh >= i.get_pos()[1] or main_y >= i.get_pos()[1] + i.get_heigh()):
             touch = True
-    # (x1 + l1) >= x2 and (y1 + h1 <= y2 or y1 <= y2 + h2) or (x1 <= x2 + l2) and (y1 + h1 >= y2 or y1 >= y2 + h2)
-    print(touch)
     return touch
 
 
 def the_game(time, ev=None):
-    global doodle, doodle_jump, jump
+    global doodle, doodle_jump, jump, cloud
+    for i in cloud_koords:
+        screen.blit(cloud, tuple(i))
     if main.check_end is False:
         jump = 0
         the_end(time, back.get_result())
@@ -175,7 +169,7 @@ def the_game(time, ev=None):
                 elif pygame.mouse.get_pos()[0] > main.get_posit()[0] + 45:
                     main.right()
     if main.flying:
-        if jump >= 20:
+        if jump >= 25:
             jump = 0
             main.fly()
         elif collis(main.get_posit()):
@@ -192,13 +186,31 @@ def the_game(time, ev=None):
         the_end(time, back.get_result())
 
 
-def the_end(picture_time, results):
+def the_end(picture_time, results='0'):
     fon = pygame.transform.scale(load_image('fon.jpg'), size)
     start_pictures(fon, results, -5, 40)
     if int(picture_time % 2) == 0:
         screen.blit(doodle, (-20, 170))
     else:
         screen.blit(doodle_jump, (-20, 170))
+
+
+def playing(time):
+    global run, play
+    ev = None
+    for event in pygame.event.get():
+        ev = None
+        if event.type == pygame.QUIT:
+            run = False
+        elif event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
+            play = True
+            ev = event
+    if play:
+        Cloud().change_h()
+        all_sprites.draw(screen)
+        the_game(ev)
+    else:
+        the_end(time)
 
 
 start_screen()

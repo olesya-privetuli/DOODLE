@@ -1,8 +1,10 @@
 from random import randint
+import pygame
 
 
-class Platforms:
+class Platforms(pygame.sprite.Sprite):
     def __init__(self, y=-1):
+        pygame.sprite.Sprite.__init__(self)
         if y == -1:
             self.coor = (self.x, self.y) = (randint(0, 490), randint(0, 500))
         else:
@@ -23,7 +25,7 @@ class Platforms:
     def get_width(self):
         return 90
 
-    def get_height(self):
+    def get_heigh(self):
         return 60
 
 

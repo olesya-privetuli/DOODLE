@@ -4,7 +4,7 @@ from Background import Background
 class Doodle:
     def __init__(self):
         self.coor = (self.x, self.y) = (210, 500)
-        self.height = -6
+        self.height = -5
         self.flying = True
 
     def jump(self):
