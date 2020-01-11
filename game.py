@@ -4,11 +4,9 @@ import sys
 import random
 from Background import Background
 from Platforms import Platforms, Land
-from Wings import Wings
 from Doodle import Doodle
 from cloud import Cloud
-from constans import size, record_height, dood_widt, dood_heigh, FPS, v, jump_time, jump, clock
-from constans import land_height, numb_of_clouds, live, change_of_height, all_speeds, cloud_koords
+from constans import size, record_height, FPS, v, clock, cloud_koords
 
 pygame.init()
 screen = pygame.display.set_mode(size)
@@ -50,6 +48,9 @@ platf_br = pygame.transform.scale(load_image('platf_br.png', -1), (90, 60))
 # земля
 earth = load_image('land.png', -1)
 
+# длина и ширина doodle в игре
+doodle_size = dood_w, dood_h = 90, 60
+
 main = Doodle()
 back = Background()
 plate = Platforms()
@@ -62,6 +63,7 @@ all_sprites = pygame.sprite.Group()
 mobs = pygame.sprite.Group()
 run = True
 play = True
+jump = 0
 
 
 def start_pictures(fon, text, record=-5, font_num=20):
@@ -130,19 +132,19 @@ def drawing():
     global platforms
     if platforms[0].get_pos()[1] > 0:
         screen.blit(earth, land.get_pos())
-    for i in platforms[1:]:
+    for _ in platforms[1:]:
         screen.blit(platf1, land.get_pos())
 
 
 def collis(main_pos):
-    global platforms, dood_widt, dood_heigh
-    main_x, main_y = main_pos
+    global platforms, dood_w, dood_h
+    m_x, m_y = main_pos
     touch = False
     for i in platforms:
-        if main_x + dood_widt >= i.get_pos()[0] and \
-                ((main_y + dood_heigh <= i.get_pos()[1] or main_y <= i.get_pos()[1] + i.get_heigh()) or \
-                 (main_x <= i.get_pos()[0] + i.get_width())) and \
-                (main_y + dood_heigh >= i.get_pos()[1] or main_y >= i.get_pos()[1] + i.get_heigh()):
+        if ((m_y + dood_h <= i.get_pos()[1] or m_y + dood_h <= i.get_pos()[1] + i.get_heigh()) or
+            (m_x <= i.get_pos()[0] + i.get_widt())) and \
+                m_x + dood_w >= i.get_pos()[0] and \
+                (m_y + dood_h >= i.get_pos()[1] or m_y + dood_h >= i.get_pos()[1] + i.get_heigh()):
             touch = True
     return touch
 

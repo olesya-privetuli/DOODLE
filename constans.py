@@ -4,11 +4,8 @@ import pygame
 size = width, height = 500, 600
 # высший результат всех игр
 record_height = 'record'
-doodle_size = dood_widt, dood_heigh = 90, 60
 FPS = 60
 v = 3
-jump_time = 0
-jump = 0
 land_height = 540
 numb_of_clouds = 8
 live = True

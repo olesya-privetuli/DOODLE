@@ -22,7 +22,7 @@ class Platforms(pygame.sprite.Sprite):
     def get_pos(self):
         return self.coor
 
-    def get_width(self):
+    def get_widt(self):
         return 90
 
     def get_heigh(self):
@@ -39,7 +39,7 @@ class Land(Platforms):
             self.y += self.height
         self.coor = (self.x, self.y)
 
-    def get_width(self):
+    def get_widt(self):
         return 500
 
     def get_heigh(self):
