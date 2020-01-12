@@ -15,12 +15,16 @@ cloud_koords = [(0, 0), (125, 50), (60, 120), (300, 300), (410, 500), (100, 500)
 clock = pygame.time.Clock()
 BLUE = (0, 191, 255)
 max_h = 30
+jump_h = -5
 dood_w = 90
+foot_w = 20
 platf_width = 90
 pl_heigh = 20
-numb_of_plate = 6
+land_w = 500
+land_h = 50
+numb_of_plate = 5
 platf_jump = [True, False * numb_of_plate]
 platf_koords = [(0, 550)]
-platf_heights = [400, 320, 240, 160, 80, 0, -80]
+platf_heights = [400, 310, 220, 130, 40, -50]
 for i in range(numb_of_plate):
     platf_koords.append((random.randint(0, width - platf_width), platf_heights[i]))

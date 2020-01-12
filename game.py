@@ -7,7 +7,7 @@ from Platforms import Platforms, Land
 from Doodle import Doodle
 from cloud import Cloud
 from constans import size, record_height, FPS, v, clock, cloud_koords, BLUE, platf_koords
-from constans import max_h, platf_width, numb_of_plate
+from constans import max_h, numb_of_plate, foot_w
 
 pygame.init()
 screen = pygame.display.set_mode(size)
@@ -53,7 +53,7 @@ plate = Platforms()
 land = Land()
 platforms = [land]
 for _ in range(numb_of_plate):
-    platforms.append(land)
+    platforms.append(plate)
 monsters = []
 
 bullets = pygame.sprite.Group()
@@ -128,23 +128,19 @@ def start_screen():
         clock.tick(FPS)
 
 
-def platf_drawing():
-    global platforms
-    if platforms[0].get_pos()[1] > 0:
-        screen.blit(earth, land.get_pos())
-    for _ in platforms[1:]:
-        screen.blit(platf, land.get_pos())
-
-
 def collis(main_pos):
-    global platforms, dood_w, dood_h
+    global platforms, dood_w, dood_h, land, plate
     m_x, m_y = main_pos
     touch = False
-    for i in platforms:
-        if ((m_y + dood_h <= i.get_pos()[1] or m_y + dood_h <= i.get_pos()[1] + i.get_heigh()) or
-            (m_x <= i.get_pos()[0] + platf_width)) and \
-                m_x + dood_w >= i.get_pos()[0] and \
-                (m_y + dood_h >= i.get_pos()[1] or m_y + dood_h >= i.get_pos()[1] + i.get_heigh()):
+    # проверка на пересечение с платформой
+    for i in range(len(platforms)):
+        if i == 0:
+            p = land
+        else:
+            p = plate
+        if p.get_pos(i)[1] < m_y + dood_h < p.get_pos(i)[1] + p.get_heigh() and \
+                m_x + dood_w - foot_w > p.get_pos(i)[0] and \
+                m_x + foot_w < p.get_pos(i)[0] + p.get_widt():
             touch = True
     return touch
 
