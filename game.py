@@ -6,11 +6,10 @@ from Background import Background
 from Platforms import Platforms, Land
 from Doodle import Doodle
 from cloud import Cloud
-from constans import size, record_height, FPS, v, clock, cloud_koords
+from constans import size, record_height, FPS, v, clock, cloud_koords, BLUE, platf_koords, max_h, platf_width, pl_heigh
 
 pygame.init()
 screen = pygame.display.set_mode(size)
-screen.fill((255, 255, 255))
 
 
 def load_image(name, colorkey=None):
@@ -26,9 +25,11 @@ def load_image(name, colorkey=None):
 
 
 # главный герой
-doodle = pygame.transform.scale(load_image('doodle.png', -1), (510, 340))
+big_doodle = pygame.transform.scale(load_image('doodle.png', -1), (510, 340))
+doodle = pygame.transform.scale(load_image('doodle.png', -1), (90, 60))
 # прыгающий doodle
-doodle_jump = pygame.transform.scale(load_image('doodle_jump.png', -1), (510, 340))
+big_doodle_jump = pygame.transform.scale(load_image('doodle_jump.png', -1), (510, 340))
+doodle_jump = pygame.transform.scale(load_image('doodle_jump.png', -1), (90, 60))
 # крылья
 wings = pygame.transform.scale(load_image('wings.png', -1), (18, 12))
 # doodle с крыльями
@@ -36,15 +37,9 @@ doodle_wings = pygame.transform.scale(load_image('doodle_wings.png', -1), (90, 6
 # монстры
 monster = pygame.transform.scale(load_image('monster.png', -1), (90, 60))
 # картинка облака
-cloud = pygame.transform.scale(load_image('cloud.png'), (90, 60))
+cloud = pygame.transform.scale(load_image('cloud.png', -1), (90, 60))
 # платформа из земли
-platf1 = pygame.transform.scale(load_image('platf1.png', -1), (90, 60))
-# платформа из земли поменьше
-platf2 = pygame.transform.scale(load_image('platf2.png', -1), (90, 60))
-# платформа из дерева
-platf_tr = pygame.transform.scale(load_image('platf_tr.png', -1), (90, 60))
-# сломанная платформа из дерева
-platf_br = pygame.transform.scale(load_image('platf_br.png', -1), (90, 60))
+platf = pygame.transform.scale(load_image('platf.png', -1), (90, 20))
 # земля
 earth = load_image('land.png', -1)
 
@@ -117,10 +112,10 @@ def start_screen():
                     start = True
             if int(time_picture % 2) == 0:
                 start_pictures(fon, intro_text, record)
-                screen.blit(doodle, (-20, 170))
+                screen.blit(big_doodle, (-20, 170))
             else:
                 start_pictures(fon, intro_text, record)
-                screen.blit(doodle_jump, (-20, 170))
+                screen.blit(big_doodle_jump, (-20, 170))
         else:
             playing(time_picture)
         time_picture += v / FPS
@@ -128,37 +123,42 @@ def start_screen():
         clock.tick(FPS)
 
 
-def drawing():
+def platf_drawing():
     global platforms
     if platforms[0].get_pos()[1] > 0:
         screen.blit(earth, land.get_pos())
     for _ in platforms[1:]:
-        screen.blit(platf1, land.get_pos())
+        screen.blit(platf, land.get_pos())
 
 
 def collis(main_pos):
-    global platforms, dood_w, dood_h
+    global platforms, dood_w, dood_h, pl_heigh
     m_x, m_y = main_pos
     touch = False
     for i in platforms:
-        if ((m_y + dood_h <= i.get_pos()[1] or m_y + dood_h <= i.get_pos()[1] + i.get_heigh()) or
-            (m_x <= i.get_pos()[0] + i.get_widt())) and \
+        if ((m_y + dood_h <= i.get_pos()[1] or m_y + dood_h <= i.get_pos()[1] + pl_heigh) or
+            (m_x <= i.get_pos()[0] + platf_width)) and \
                 m_x + dood_w >= i.get_pos()[0] and \
-                (m_y + dood_h >= i.get_pos()[1] or m_y + dood_h >= i.get_pos()[1] + i.get_heigh()):
+                (m_y + dood_h >= i.get_pos()[1] or m_y + dood_h >= i.get_pos()[1] + pl_heigh):
             touch = True
     return touch
 
 
 def the_game(time, ev=None):
     global doodle, doodle_jump, jump, cloud
-    for i in cloud_koords:
-        screen.blit(cloud, tuple(i))
     if main.check_end is False:
         jump = 0
         the_end(time, back.get_result())
     else:
-        screen.fill((0, 191, 255))
-        screen.blit(doodle, main.get_posit())
+        screen.fill(BLUE)
+        for koor in cloud_koords:
+            screen.blit(cloud, koor)
+        for pl in platf_koords:
+            screen.blit(platf, pl)
+        if jump == 0:
+            screen.blit(doodle, main.get_posit())
+        else:
+            screen.blit(doodle_jump, main.get_posit())
         if ev:
             if ev.type == pygame.KEYDOWN:
                 if ev.key == pygame.K_LEFT:
@@ -171,7 +171,7 @@ def the_game(time, ev=None):
                 elif pygame.mouse.get_pos()[0] > main.get_posit()[0] + 45:
                     main.right()
     if main.flying:
-        if jump >= 25:
+        if jump >= max_h:
             jump = 0
             main.fly()
         elif collis(main.get_posit()):
@@ -182,7 +182,6 @@ def the_game(time, ev=None):
         jump = 0
         main.fly()
     main.jump()
-    drawing()
     if main.get_posit()[1] > 600:
         doodle = pygame.transform.scale(load_image('doodle.png', -1), (510, 340))
         the_end(time, back.get_result())
@@ -192,9 +191,9 @@ def the_end(picture_time, results='0'):
     fon = pygame.transform.scale(load_image('fon.jpg'), size)
     start_pictures(fon, results, -5, 40)
     if int(picture_time % 2) == 0:
-        screen.blit(doodle, (-20, 170))
+        screen.blit(big_doodle, (-20, 170))
     else:
-        screen.blit(doodle_jump, (-20, 170))
+        screen.blit(big_doodle_jump, (-20, 170))
 
 
 def playing(time):
@@ -209,7 +208,6 @@ def playing(time):
             ev = event
     if play:
         Cloud().change_h()
-        all_sprites.draw(screen)
         the_game(ev)
     else:
         the_end(time)

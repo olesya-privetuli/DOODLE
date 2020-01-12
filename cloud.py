@@ -1,5 +1,4 @@
-import random
-from constans import numb_of_clouds, all_speeds, cloud_koords
+from constans import all_speeds, cloud_koords
 
 
 class Cloud:
@@ -7,9 +6,9 @@ class Cloud:
         self.width, self.height = 500, 600
 
     def change_h(self):
-        for koor in cloud_koords:
-            if koor[1] <= self.height:
-                a = koor[1] + all_speeds[cloud_koords.index(koor)]
-                koor[1] = a
+        for i in range(len(cloud_koords)):
+            if cloud_koords[i][1] <= self.height:
+                a = cloud_koords[i][1] + all_speeds[cloud_koords.index(cloud_koords[i])]
+                cloud_koords[i] = cloud_koords[i][0], a
             else:
-                koor[1] = -30
+                cloud_koords[i] = cloud_koords[i][0], -30

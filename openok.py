@@ -30,11 +30,11 @@ class Cloud:
                 koor[1] = -30
 
 
-class Platforms(pygame.sprite.Sprite):
+class Monsters(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface((70, 20))
-        self.image.fill(pygame.Color('brown'))
+        self.image.fill()
         self.rect = self.image.get_rect()
         self.rect.x = random.randrange(width - self.rect.width)
         self.rect.y = random.randrange(-100, -40)

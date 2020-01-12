@@ -1,5 +1,6 @@
 from random import randint
 import pygame
+from constans import platf_koords
 
 
 class Platforms(pygame.sprite.Sprite):
@@ -11,9 +12,12 @@ class Platforms(pygame.sprite.Sprite):
             self.coor = (self.x, self.y) = (randint(0, 490), y)
         self.height = 3
 
-    def down(self):
-        self.y += self.height
-        self.coor = (self.x, self.y)
+    for koor in platf_koords:
+        pass
+        #if koor[1] <= self.height:
+         #   koor[1] = a
+        #else:
+         #   koor[1] = -30
 
     def below_wind(self):
         if self.y > 600:
