@@ -1,4 +1,5 @@
 from Background import Background
+from constans import dood_w, width
 
 
 class Doodle:
@@ -16,15 +17,16 @@ class Doodle:
 
     def right(self):
         self.x += 5
-        if self.x + 45 > 500:
-            self.x = -45
-        elif self.x + 45 < 0:
-            self.x = 500
+        if self.x + 0.5 * dood_w > width:
+            self.x = - 0.5 * dood_w
         self.coor = (self.x, self.y)
 
     def left(self):
         self.x -= 5
+        if self.x + 0.5 * dood_w < 0:
+            self.x = width - 0.5 * dood_w
         self.coor = (self.x, self.y)
+
 
     def get_posit(self):
         return self.coor

@@ -6,7 +6,8 @@ from Background import Background
 from Platforms import Platforms, Land
 from Doodle import Doodle
 from cloud import Cloud
-from constans import size, record_height, FPS, v, clock, cloud_koords, BLUE, platf_koords, max_h, platf_width, pl_heigh
+from constans import size, record_height, FPS, v, clock, cloud_koords, BLUE, platf_koords
+from constans import max_h, platf_width, numb_of_plate
 
 pygame.init()
 screen = pygame.display.set_mode(size)
@@ -51,6 +52,8 @@ back = Background()
 plate = Platforms()
 land = Land()
 platforms = [land]
+for _ in range(numb_of_plate):
+    platforms.append(land)
 monsters = []
 
 bullets = pygame.sprite.Group()
@@ -58,6 +61,8 @@ all_sprites = pygame.sprite.Group()
 mobs = pygame.sprite.Group()
 run = True
 play = True
+left = False
+right = False
 jump = 0
 
 
@@ -132,44 +137,37 @@ def platf_drawing():
 
 
 def collis(main_pos):
-    global platforms, dood_w, dood_h, pl_heigh
+    global platforms, dood_w, dood_h
     m_x, m_y = main_pos
     touch = False
     for i in platforms:
-        if ((m_y + dood_h <= i.get_pos()[1] or m_y + dood_h <= i.get_pos()[1] + pl_heigh) or
+        if ((m_y + dood_h <= i.get_pos()[1] or m_y + dood_h <= i.get_pos()[1] + i.get_heigh()) or
             (m_x <= i.get_pos()[0] + platf_width)) and \
                 m_x + dood_w >= i.get_pos()[0] and \
-                (m_y + dood_h >= i.get_pos()[1] or m_y + dood_h >= i.get_pos()[1] + pl_heigh):
+                (m_y + dood_h >= i.get_pos()[1] or m_y + dood_h >= i.get_pos()[1] + i.get_heigh()):
             touch = True
     return touch
 
 
-def the_game(time, ev=None):
-    global doodle, doodle_jump, jump, cloud
+def the_game():
+    global doodle, doodle_jump, jump, cloud, left, right
     if main.check_end is False:
         jump = 0
-        the_end(time, back.get_result())
     else:
         screen.fill(BLUE)
         for koor in cloud_koords:
             screen.blit(cloud, koor)
-        for pl in platf_koords:
+        screen.blit(earth, platf_koords[0])
+        for pl in platf_koords[1:]:
             screen.blit(platf, pl)
         if jump == 0:
             screen.blit(doodle, main.get_posit())
         else:
             screen.blit(doodle_jump, main.get_posit())
-        if ev:
-            if ev.type == pygame.KEYDOWN:
-                if ev.key == pygame.K_LEFT:
-                    main.left()
-                elif ev.key == pygame.K_RIGHT:
-                    main.right()
-            if ev.type == pygame.MOUSEBUTTONDOWN:
-                if pygame.mouse.get_pos()[0] < main.get_posit()[0] + 45:
-                    main.left()
-                elif pygame.mouse.get_pos()[0] > main.get_posit()[0] + 45:
-                    main.right()
+        if left:
+            main.left()
+        elif right:
+            main.right()
     if main.flying:
         if jump >= max_h:
             jump = 0
@@ -184,7 +182,6 @@ def the_game(time, ev=None):
     main.jump()
     if main.get_posit()[1] > 600:
         doodle = pygame.transform.scale(load_image('doodle.png', -1), (510, 340))
-        the_end(time, back.get_result())
 
 
 def the_end(picture_time, results='0'):
@@ -197,18 +194,26 @@ def the_end(picture_time, results='0'):
 
 
 def playing(time):
-    global run, play
-    ev = None
+    global run, play, left, right
     for event in pygame.event.get():
-        ev = None
         if event.type == pygame.QUIT:
             run = False
-        elif event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
-            play = True
-            ev = event
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                left = True
+            elif event.key == pygame.K_RIGHT:
+                right = True
+        elif event.type == pygame.KEYUP:
+            left = False
+            right = False
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if pygame.mouse.get_pos()[0] < main.get_posit()[0] + 45:
+                main.left()
+            elif pygame.mouse.get_pos()[0] > main.get_posit()[0] + 45:
+                main.right()
     if play:
         Cloud().change_h()
-        the_game(ev)
+        the_game()
     else:
         the_end(time)
 

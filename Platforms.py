@@ -30,7 +30,7 @@ class Platforms(pygame.sprite.Sprite):
         return 90
 
     def get_heigh(self):
-        return 60
+        return 20
 
 
 class Land(Platforms):

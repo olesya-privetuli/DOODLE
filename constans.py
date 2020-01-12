@@ -15,6 +15,7 @@ cloud_koords = [(0, 0), (125, 50), (60, 120), (300, 300), (410, 500), (100, 500)
 clock = pygame.time.Clock()
 BLUE = (0, 191, 255)
 max_h = 30
+dood_w = 90
 platf_width = 90
 pl_heigh = 20
 numb_of_plate = 6
