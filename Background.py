@@ -1,5 +1,6 @@
 import os
-record_height = 'record'  # высший результат всех игр
+# высший результат всех игр
+record_height = 'record'
 
 
 class Background:
@@ -11,9 +12,11 @@ class Background:
     def get_result(self):
         with open(os.path.join(self.dir, record_height), 'r+') as f:
             self.record = int(f.read())
-        if self.result >= self.record:  # новый рекорд
+        if self.result >= self.record:
+            # новый рекорд
             self.record = self.result
-            with open(os.path.join(self.dir, record_height), 'w') as f:  # изменение рекорда
+            # изменение рекорда
+            with open(os.path.join(self.dir, record_height), 'w') as f:
                 f.write(str(self.result))
             text = ['Поздравляем!',
                     'У вас новый рекорд: {}'.format(self.result)]
