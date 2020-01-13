@@ -13,6 +13,7 @@ pygame.init()
 screen = pygame.display.set_mode(size)
 
 
+# загрузка изображений
 def load_image(name, colorkey=None):
     fullname = os.path.join('pictures', name)
     image = pygame.image.load(fullname).convert()
@@ -47,25 +48,34 @@ earth = load_image('land.png', -1)
 # длина и ширина doodle в игре
 doodle_size = dood_w, dood_h = 90, 60
 
+# главный персонаж игры
 main = Doodle()
+# класс ведет счет игры
 back = Background()
+# класс, отвечающий за платформы
 plate = Platforms()
+# класс, унаследованный от класса платформ, для земли
 land = Land()
+# список со всеми выводимыми платформами
 platforms = [land]
 for _ in range(numb_of_plate):
     platforms.append(plate)
-monsters = []
 
-bullets = pygame.sprite.Group()
 all_sprites = pygame.sprite.Group()
-mobs = pygame.sprite.Group()
+all_sprites.add(main)
+# вывод окна
 run = True
+# начало игры
 play = True
+# зажатии клавиши влево
 left = False
+# зажатие клавиши вправо
 right = False
+# изменение координаты при прыжке
 jump = 0
 
 
+# функция прорисовки начального окна
 def start_pictures(fon, text, record=-5, font_num=20):
     screen.blit(fon, (0, 0))
     font = pygame.font.Font(None, 75)
@@ -115,11 +125,10 @@ def start_screen():
                 elif event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
                     doodle = pygame.transform.scale(load_image('doodle.png', -1), (90, 60))
                     start = True
+            start_pictures(fon, intro_text, record)
             if int(time_picture % 2) == 0:
-                start_pictures(fon, intro_text, record)
                 screen.blit(big_doodle, (-20, 170))
             else:
-                start_pictures(fon, intro_text, record)
                 screen.blit(big_doodle_jump, (-20, 170))
         else:
             playing(time_picture)
@@ -128,6 +137,11 @@ def start_screen():
         clock.tick(FPS)
 
 
+def check_board():
+    pass
+
+
+# функция отвечает за касание главного героя с платформами
 def collis(main_pos):
     global platforms, dood_w, dood_h, land, plate
     m_x, m_y = main_pos
@@ -145,6 +159,7 @@ def collis(main_pos):
     return touch
 
 
+# сама игра
 def the_game():
     global doodle, doodle_jump, jump, cloud, left, right
     if main.check_end is False:
@@ -180,6 +195,7 @@ def the_game():
         doodle = pygame.transform.scale(load_image('doodle.png', -1), (510, 340))
 
 
+# вывод окна при проигрыше
 def the_end(picture_time, results='0'):
     fon = pygame.transform.scale(load_image('fon.jpg'), size)
     start_pictures(fon, results, -5, 40)
@@ -189,6 +205,7 @@ def the_end(picture_time, results='0'):
         screen.blit(big_doodle_jump, (-20, 170))
 
 
+# функция вызывается при начале игры
 def playing(time):
     global run, play, left, right
     for event in pygame.event.get():
