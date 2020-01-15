@@ -7,6 +7,7 @@ from constans import land_w, land_h
 class Platforms(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
+        self.coor = self.x, self.y = (0, 0)
 
     def down(self, koor_ind):
         for koor in platf_koords:

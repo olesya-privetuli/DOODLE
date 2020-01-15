@@ -1,11 +1,11 @@
 import pygame
 import os
 import sys
-import random
 from Background import Background
 from Platforms import Platforms, Land
 from Doodle import Doodle
 from cloud import Cloud
+from Board import Board
 from constans import size, record_height, FPS, v, clock, cloud_koords, BLUE, platf_koords
 from constans import max_h, numb_of_plate, foot_w
 
@@ -27,15 +27,21 @@ def load_image(name, colorkey=None):
 
 
 # главный герой
+doodle = load_image('doodle.png', -1)
 big_doodle = pygame.transform.scale(load_image('doodle.png', -1), (510, 340))
-doodle = pygame.transform.scale(load_image('doodle.png', -1), (90, 60))
+yellow_doodle = load_image('doodle.png', -1)
+purple_doodle = load_image('purple_doodle.png', -1)
+blue_doodle = load_image('doodle_blue.png', -1)
+brown_doodle = load_image('doodle_brown.png', -1)
+doodles = [yellow_doodle, purple_doodle, blue_doodle, brown_doodle]
 # прыгающий doodle
+doodle_jump = load_image('doodle.png', -1)
 big_doodle_jump = pygame.transform.scale(load_image('doodle_jump.png', -1), (510, 340))
-doodle_jump = pygame.transform.scale(load_image('doodle_jump.png', -1), (90, 60))
-# крылья
-wings = pygame.transform.scale(load_image('wings.png', -1), (18, 12))
-# doodle с крыльями
-doodle_wings = pygame.transform.scale(load_image('doodle_wings.png', -1), (90, 60))
+yellow_doodle_jump = load_image('doodle_jump.png', -1)
+purple_doodle_jump = load_image('doodle_purple_jump.png', -1)
+blue_doodle_jump = load_image('doodle_blue_jump.png', -1)
+brown_doodle_jump = load_image('doodle_brown_jump.png', -1)
+doodles_jump = [yellow_doodle_jump, purple_doodle_jump, blue_doodle_jump, brown_doodle_jump]
 # монстры
 monster = pygame.transform.scale(load_image('monster.png', -1), (90, 60))
 # картинка облака
@@ -115,21 +121,27 @@ def start_screen():
     fon = pygame.transform.scale(load_image('fon.jpg'), size)
 
     time_picture = 0
-    start = False
+    start = 0
     while run:
-        if start is False:
+        if start == 0 or start == 1:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     run = False
                     terminate()
                 elif event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
-                    doodle = pygame.transform.scale(load_image('doodle.png', -1), (90, 60))
-                    start = True
-            start_pictures(fon, intro_text, record)
-            if int(time_picture % 2) == 0:
-                screen.blit(big_doodle, (-20, 170))
+                    if start == 0:
+                        start = 1
+                    elif event.type == pygame.MOUSEBUTTONDOWN:
+                        change_dood(event)
+                        start = 2
+            if start == 0:
+                start_pictures(fon, intro_text, record)
+                if int(time_picture % 2) == 0:
+                    screen.blit(big_doodle, (-20, 170))
+                else:
+                    screen.blit(big_doodle_jump, (-20, 170))
             else:
-                screen.blit(big_doodle_jump, (-20, 170))
+                choice(time_picture)
         else:
             playing(time_picture)
         time_picture += v / FPS
@@ -137,8 +149,26 @@ def start_screen():
         clock.tick(FPS)
 
 
-def check_board():
-    pass
+def choice(time):
+    global doodles, doodles_jump
+    screen.fill(BLUE)
+    for i in range(len(doodles)):
+        if int(time % 2) == 0:
+            draw_doodle(doodles[i], i)
+        else:
+            draw_doodle(doodles_jump[i], i)
+
+
+def draw_doodle(name, i):
+    screen.blit(pygame.transform.scale(name, (270, 180)),
+                (Board().render()[i][0], Board().render()[i][1]))
+
+
+def change_dood(event):
+    global doodles, doodles_jump, doodle, doodle_jump
+    num = Board().picture(event.pos)
+    doodle = pygame.transform.scale(doodles[num], (90, 60))
+    doodle_jump = pygame.transform.scale(doodles_jump[num], (90, 60))
 
 
 # функция отвечает за касание главного героя с платформами
@@ -191,8 +221,6 @@ def the_game():
         jump = 0
         main.fly()
     main.jump()
-    if main.get_posit()[1] > 600:
-        doodle = pygame.transform.scale(load_image('doodle.png', -1), (510, 340))
 
 
 # вывод окна при проигрыше
