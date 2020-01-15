@@ -11,7 +11,7 @@ class Board:
 
     def lst(self):
         self.board = []
-        c = 50
+        c = 0
         for i in range(self.height):
             r = 0
             for j in range(self.width):

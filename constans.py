@@ -42,3 +42,5 @@ platf_koords = [(0, 550)]
 platf_heights = [400, 310, 220, 130, 40, -50]
 for i in range(numb_of_plate):
     platf_koords.append((random.randint(0, width - platf_width), platf_heights[i]))
+# дополнительная высота для картинок
+dop_h = 70

@@ -7,7 +7,7 @@ from Doodle import Doodle
 from cloud import Cloud
 from Board import Board
 from constans import size, record_height, FPS, v, clock, cloud_koords, BLUE, platf_koords
-from constans import max_h, numb_of_plate, foot_w
+from constans import max_h, numb_of_plate, foot_w, dop_h
 
 pygame.init()
 screen = pygame.display.set_mode(size)
@@ -113,7 +113,7 @@ def start_screen():
     intro_text = ["Нажимая клавиши 'вправо', 'влево',",
                   "перемещайте героя на платформы.",
                   "Избегайте монстров и старайтесь не падать.",
-                  "Крылья помогут вам взлететь!"]
+                  "Нажмите и выберете себе персонажа"]
 
     dirname = os.path.dirname(__file__)
     with open(os.path.join(dirname, record_height), 'r+') as f:
@@ -161,7 +161,7 @@ def choice(time):
 
 def draw_doodle(name, i):
     screen.blit(pygame.transform.scale(name, (270, 180)),
-                (Board().render()[i][0], Board().render()[i][1]))
+                (Board().render()[i][0], Board().render()[i][1] + dop_h))
 
 
 def change_dood(event):
