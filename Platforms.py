@@ -2,6 +2,7 @@ from random import randint
 import pygame
 from constans import platf_koords, height, width, platf_width, pl_heigh
 from constans import land_w, land_h, new_h, shift
+from constans import new_h, shift, land_w, land_h
 
 
 class Platforms(pygame.sprite.Sprite):
@@ -15,6 +16,10 @@ class Platforms(pygame.sprite.Sprite):
                 platf_koords[koor] = platf_koords[koor][0], platf_koords[koor][1] + shift
             elif koor != 0:
                 platf_koords[koor] = randint(0, width - platf_width), new_h
+            if platf_koords[koor][1] <= height or koor == 0 and platf_koords[0][1] < height * 3:
+                platf_koords[koor] = platf_koords[koor][0], platf_koords[koor][1] + shift
+            elif koor != 0:
+                platf_koords[koor] = randint(0, width- platf_width), new_h
 
     def get_pos(self, ind):
         return platf_koords[ind]
