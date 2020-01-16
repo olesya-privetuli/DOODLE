@@ -67,6 +67,11 @@ platforms = [land]
 for _ in range(numb_of_plate):
     platforms.append(plate)
 
+# Загрузка звука прыжка
+pygame.mixer.init()
+pygame.mixer.music.load('music.mp3')
+pygame.mixer.music.play(-1)
+
 all_sprites = pygame.sprite.Group()
 all_sprites.add(main)
 # вывод окна
