@@ -12,6 +12,12 @@ class Background:
     def result_on_game(self):
         return self.result
 
+    def new_jump(self):
+        self.result += 1
+
+    def new_result(self):
+        return self.result
+
     def get_result(self):
         with open(os.path.join(self.dir, record_height), 'r+') as f:
             self.record = int(f.read())

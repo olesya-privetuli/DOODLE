@@ -7,7 +7,7 @@ from Doodle import Doodle
 from cloud import Cloud
 from Board import Board
 from constans import size, record_height, FPS, v, clock, cloud_koords, BLUE, platf_koords
-from constans import max_h, numb_of_plate, foot_w, dop_h
+from constans import max_h, numb_of_plate, foot_w, dop_h, max_dood_h
 
 pygame.init()
 screen = pygame.display.set_mode(size)
@@ -66,6 +66,9 @@ land = Land()
 platforms = [land]
 for _ in range(numb_of_plate):
     platforms.append(plate)
+
+# запрыгивал ли персонаж на платформу
+platf_jump = [True, False, False, False, False, False, False, False, False]
 
 # Загрузка звука прыжка
 pygame.mixer.init()
@@ -178,7 +181,7 @@ def change_dood(event):
 
 # функция отвечает за касание главного героя с платформами
 def collis(main_pos):
-    global platforms, dood_w, dood_h, land, plate
+    global platforms, dood_w, dood_h, land, plate, platf_jump
     m_x, m_y = main_pos
     touch = False
     # проверка на пересечение с платформой
@@ -190,7 +193,13 @@ def collis(main_pos):
         if p.get_pos(i)[1] < m_y + dood_h < p.get_pos(i)[1] + p.get_heigh() and \
                 m_x + dood_w - foot_w > p.get_pos(i)[0] and \
                 m_x + foot_w < p.get_pos(i)[0] + p.get_widt():
+            if platf_jump[i] is False:
+                back.new_jump()
+                platf_jump[i] = True
+                plate.down()
             touch = True
+        if p.get_pos(i)[1] < 0:
+            platf_jump[i] = False
     return touch
 
 
@@ -215,6 +224,7 @@ def the_game():
         elif right:
             main.right()
     if main.flying:
+        check_h()
         if jump >= max_h:
             jump = 0
             main.fly()
@@ -226,6 +236,14 @@ def the_game():
         jump = 0
         main.fly()
     main.jump()
+
+
+def check_h():
+    if main.get_posit()[1] < max_dood_h:
+        plate.down()
+        main.down()
+        if main.get_fly():
+            main.fly()
 
 
 # вывод окна при проигрыше
