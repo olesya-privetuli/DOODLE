@@ -1,6 +1,7 @@
 from random import randint
 import pygame
-from constans import platf_koords, height, numb_of_clouds, max_h, jump_h, platf_width, pl_heigh
+from constans import platf_koords, height, width, max_h, jump_h, platf_width, pl_heigh, platf_jump
+from constans import new_h
 from constans import land_w, land_h
 
 
@@ -9,17 +10,13 @@ class Platforms(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.coor = self.x, self.y = (0, 0)
 
-    def down(self, koor_ind):
-        for koor in platf_koords:
-            for i in range(1, numb_of_clouds + 1):
-                if platf_koords[i][1] <= height:
-                   platf_koords[i] = platf_koords[i][0], platf_koords[i][1] + max_h * jump_h
-                else:
-                    platf_koords[i] = platf_koords[i][0], -30
-
-    def below_wind(self, ind):
-        if platf_koords[ind][1] > 600:
-            self.coor = (self.x, self.y) = (randint(0, 1800), 0)
+    def down(self):
+        for koor in range(len(platf_koords)):
+            if platf_koords[koor][1] <= height:
+                platf_koords[koor] = platf_koords[koor][0], platf_koords[koor][1] + max_h * jump_h
+            elif koor != 0 and platf_koords[0] <= width + Land().get_heigh():
+                platf_koords[koor] = randint(0, width), new_h
+                platf_jump[koor] = False
 
     def get_pos(self, ind):
         return platf_koords[ind]
