@@ -10,6 +10,7 @@ land_height = 540
 numb_of_clouds = 7
 live = True
 change_of_height = 0
+dood_h = 60
 # скорость облаков
 all_speeds = [random.randrange(2, 5) for i in range(numb_of_clouds)]
 # координаты облаков
@@ -33,16 +34,17 @@ land_w = 500
 # высота земли
 land_h = 50
 # количество златформ на экране
-numb_of_plate = 5
+numb_of_plate = 8
 # новая высота для платформы
 new_h = -30
-# запрыгивал ли персонаж на платформу
-platf_jump = [True, False * numb_of_plate]
 # координаты платформ
 platf_koords = [(0, 550)]
 # координата по y, на которых находятся платформы
-platf_heights = [400, 310, 220, 130, 40, -50]
+platf_heights = [430, 340, 250, 160, 70, -20, -80, -140]
 for i in range(numb_of_plate):
     platf_koords.append((random.randint(0, width - platf_width), platf_heights[i]))
-# дополнительная высота для картинок
+# дополнительная высота
 dop_h = 70
+shift = 20
+shift_dood = 1
+max_dood_h = 100

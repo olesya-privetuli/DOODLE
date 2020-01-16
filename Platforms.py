@@ -1,8 +1,7 @@
 from random import randint
 import pygame
-from constans import platf_koords, height, width, max_h, jump_h, platf_width, pl_heigh, platf_jump
-from constans import new_h
-from constans import land_w, land_h
+from constans import platf_koords, height, width, platf_width, pl_heigh
+from constans import land_w, land_h, new_h, shift
 
 
 class Platforms(pygame.sprite.Sprite):
@@ -12,11 +11,10 @@ class Platforms(pygame.sprite.Sprite):
 
     def down(self):
         for koor in range(len(platf_koords)):
-            if platf_koords[koor][1] <= height:
-                platf_koords[koor] = platf_koords[koor][0], platf_koords[koor][1] + max_h * jump_h
-            elif koor != 0 and platf_koords[0] <= width + Land().get_heigh():
-                platf_koords[koor] = randint(0, width), new_h
-                platf_jump[koor] = False
+            if platf_koords[koor][1] < height or koor == 0 and platf_koords[0][1] < height * 3:
+                platf_koords[koor] = platf_koords[koor][0], platf_koords[koor][1] + shift
+            elif koor != 0:
+                platf_koords[koor] = randint(0, width - platf_width), new_h
 
     def get_pos(self, ind):
         return platf_koords[ind]
