@@ -7,7 +7,7 @@ from Doodle import Doodle
 from cloud import Cloud
 from Board import Board
 from constans import size, record_height, FPS, v, clock, cloud_koords, BLUE, platf_koords
-from constans import max_h, numb_of_plate, foot_w, dop_h, max_dood_h
+from constans import max_h, numb_of_plate, foot_w, dop_h, max_dood_h, shift, min_dood_h
 
 pygame.init()
 screen = pygame.display.set_mode(size)
@@ -196,7 +196,7 @@ def collis(main_pos):
             if platf_jump[i] is False:
                 back.new_jump()
                 platf_jump[i] = True
-                plate.down()
+                plate.down(shift)
             touch = True
         if p.get_pos(i)[1] < 0:
             platf_jump[i] = False
@@ -223,6 +223,7 @@ def the_game():
             main.left()
         elif right:
             main.right()
+    plate.change_h()
     if main.flying:
         check_h()
         if jump >= max_h:
@@ -239,11 +240,13 @@ def the_game():
 
 
 def check_h():
-    if main.get_posit()[1] < max_dood_h:
-        plate.down()
+    if main.get_posit()[1] <= max_dood_h:
+        plate.alow(True)
         main.down()
         if main.get_fly():
             main.fly()
+    elif main.get_posit()[1] >= min_dood_h:
+        plate.alow(False)
 
 
 # вывод окна при проигрыше
