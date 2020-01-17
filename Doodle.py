@@ -1,6 +1,6 @@
 from Background import Background
 import pygame
-from constans import dood_w, width, jump_h, shift
+from constans import dood_w, width, jump_h, shift, height, dood_h
 
 
 class Doodle(pygame.sprite.Sprite):
@@ -33,11 +33,8 @@ class Doodle(pygame.sprite.Sprite):
         return self.coor
 
     def check_end(self):
-        if self.y > 540 or self.collision():
-            Background.get_result()
-
-    def collision(self):
-        pass
+        if self.y > height - dood_h:
+            return True
 
     def fly(self):
         if self.flying:

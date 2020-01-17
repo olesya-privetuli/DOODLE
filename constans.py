@@ -36,15 +36,16 @@ land_h = 50
 # количество златформ на экране
 numb_of_plate = 7
 # новая высота для платформы
-new_h = -30
+new_h = -100
 # координаты платформ
 platf_koords = [(0, 550)]
 # координата по y, на которых находятся платформы
-platf_heights = [430, 340, 250, 160, 70, -20, -80]
+platf_heights = [520, 410, 300, 210, 120, 30, -60]
 for i in range(numb_of_plate):
     platf_koords.append((random.randint(0, width - platf_width), platf_heights[i]))
 # дополнительная высота
 dop_h = 70
-shift = 50
-max_dood_h = 40
-min_dood_h = 300
+shift = 20
+max_dood_h = 70
+min_dood_h = 350
+text_coor = (10, 10)
