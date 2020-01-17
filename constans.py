@@ -47,5 +47,9 @@ for i in range(numb_of_plate):
 dop_h = 70
 shift = 20
 max_dood_h = 70
-min_dood_h = 350
+min_dood_h = 320
 text_coor = (10, 10)
+# прыгал ли герой на платформе
+platf_jump = [True]
+for _ in range(numb_of_plate):
+    platf_jump.append(False)

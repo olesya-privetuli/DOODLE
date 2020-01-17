@@ -8,6 +8,7 @@ from cloud import Cloud
 from Board import Board
 from constans import size, record_height, FPS, v, clock, cloud_koords, BLUE, platf_koords
 from constans import max_h, numb_of_plate, foot_w, dop_h, max_dood_h, min_dood_h, text_coor
+from constans import platf_jump
 
 pygame.init()
 screen = pygame.display.set_mode(size)
@@ -63,12 +64,9 @@ plate = Platforms()
 # класс, унаследованный от класса платформ, для земли
 land = Land()
 # список со всеми выводимыми платформами
-# запрыгивал ли персонаж на платформу
-platf_jump = [True]
 platforms = [land]
 for _ in range(numb_of_plate):
     platforms.append(plate)
-    platf_jump.append(False)
 
 # Загрузка звука прыжка
 pygame.mixer.init()
@@ -79,8 +77,6 @@ all_sprites = pygame.sprite.Group()
 all_sprites.add(main)
 # вывод окна
 run = True
-# начало игры
-play = True
 # зажатии клавиши влево
 left = False
 # зажатие клавиши вправо
@@ -203,39 +199,36 @@ def collis(main_pos):
 # сама игра
 def the_game():
     global doodle, doodle_jump, jump, cloud, left, right
-    if main.check_end() is False:
-        jump = 0
+    screen.fill(BLUE)
+    for koor in cloud_koords:
+        screen.blit(cloud, koor)
+    screen.blit(earth, platf_koords[0])
+    for pl in platf_koords[1:]:
+        screen.blit(platf, pl)
+    if jump == 0:
+        screen.blit(doodle, main.get_posit())
     else:
-        screen.fill(BLUE)
-        for koor in cloud_koords:
-            screen.blit(cloud, koor)
-        screen.blit(earth, platf_koords[0])
-        for pl in platf_koords[1:]:
-            screen.blit(platf, pl)
-        if jump == 0:
-            screen.blit(doodle, main.get_posit())
-        else:
-            screen.blit(doodle_jump, main.get_posit())
-        font = pygame.font.Font(None, 20)
-        string_rendered = font.render('Счёт: {}'.format(back.result_on_game()), 1,
-                                      pygame.Color('black'))
-        screen.blit(string_rendered, text_coor)
-        if left:
-            main.left()
-        elif right:
-            main.right()
-        plate.change_h()
-        check_h()
-        if main.flying:
-            if jump >= max_h:
-                jump = 0
-                main.fly()
-            else:
-                jump += 1
-        elif collis(main.get_posit()):
+        screen.blit(doodle_jump, main.get_posit())
+    font = pygame.font.Font(None, 20)
+    string_rendered = font.render('Счёт: {}'.format(back.result_on_game()), 1,
+                                  pygame.Color('black'))
+    screen.blit(string_rendered, text_coor)
+    if left:
+        main.left()
+    elif right:
+        main.right()
+    plate.change_h()
+    check_h()
+    if main.flying:
+        if jump >= max_h:
             jump = 0
             main.fly()
-        main.jump()
+        else:
+            jump += 1
+    elif collis(main.get_posit()):
+        jump = 0
+        main.fly()
+    main.jump()
 
 
 def check_h():
@@ -260,7 +253,7 @@ def the_end(picture_time, results='0'):
 
 # функция вызывается при начале игры
 def playing(time):
-    global run, play, left, right
+    global run, left, right
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
@@ -277,11 +270,11 @@ def playing(time):
                 main.left()
             elif pygame.mouse.get_pos()[0] > main.get_posit()[0] + 45:
                 main.right()
-    if play:
+    if main.check_end():
+        the_end(time)
+    else:
         Cloud().change_h()
         the_game()
-    else:
-        the_end(time)
 
 
 start_screen()

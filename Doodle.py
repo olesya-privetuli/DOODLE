@@ -1,4 +1,3 @@
-from Background import Background
 import pygame
 from constans import dood_w, width, jump_h, shift, height, dood_h
 
@@ -32,9 +31,11 @@ class Doodle(pygame.sprite.Sprite):
     def get_posit(self):
         return self.coor
 
-    def check_end(self):
+    def check_end(self, log=False):
         if self.y > height - dood_h:
             return True
+        elif log:
+            self.coor = (self.x, self.y) = (210, 500)
 
     def fly(self):
         if self.flying:
