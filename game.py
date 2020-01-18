@@ -271,7 +271,7 @@ def playing(time):
             elif pygame.mouse.get_pos()[0] > main.get_posit()[0] + 45:
                 main.right()
     if main.check_end():
-        the_end(time)
+        the_end(time, back.get_result())
     else:
         Cloud().change_h()
         the_game()

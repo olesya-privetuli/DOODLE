@@ -1,6 +1,5 @@
 import os
-# высший результат всех игр
-record_height = 'record'
+from constans import record_height
 
 
 class Background:
