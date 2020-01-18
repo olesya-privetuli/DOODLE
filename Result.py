@@ -2,7 +2,7 @@ import os
 from constans import record_height
 
 
-class Background:
+class Result:
     def __init__(self):
         self.result = 0
         self.dir = os.path.dirname(__file__)

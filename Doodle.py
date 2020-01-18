@@ -1,5 +1,5 @@
 import pygame
-from constans import dood_w, width, jump_h, shift, height, dood_h
+from constans import dood_w, width, jump_h, dood_shift, height, dood_h
 
 
 class Doodle(pygame.sprite.Sprite):
@@ -47,5 +47,5 @@ class Doodle(pygame.sprite.Sprite):
         return self.flying
 
     def down(self):
-        self.y += shift
+        self.y += dood_shift
         self.coor = self.x, self.y

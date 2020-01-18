@@ -16,7 +16,7 @@ all_speeds = [random.randrange(2, 5) for i in range(numb_of_clouds)]
 # координаты облаков
 cloud_koords = [(0, 0), (125, 50), (60, 120), (300, 300), (410, 500), (100, 500), (250, 470)]
 clock = pygame.time.Clock()
-BLUE = (0, 191, 255)
+BLUE = (0, 192, 255)
 # максимальная высота прыжка
 max_h = 30
 # максимальное изменение координат при прыжке
@@ -33,7 +33,7 @@ pl_heigh = 20
 land_w = 500
 # высота земли
 land_h = 50
-# количество златформ на экране
+# количество платформ на экране
 numb_of_plate = 7
 # новая высота для платформы
 new_h = -100
@@ -45,9 +45,9 @@ for i in range(numb_of_plate):
     platf_koords.append((random.randint(0, width - platf_width), platf_heights[i]))
 # дополнительная высота
 dop_h = 70
-shift = 20
 max_dood_h = 70
-min_dood_h = 320
+dood_shift = 10
+min_dood_h = 310
 text_coor = (10, 10)
 # прыгал ли герой на платформе
 platf_jump = [True]

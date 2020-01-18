@@ -1,14 +1,13 @@
 import pygame
 import os
 import sys
-from Background import Background
+from Result import Result
 from Platforms import Platforms, Land
 from Doodle import Doodle
 from cloud import Cloud
 from Board import Board
-from constans import size, record_height, FPS, v, clock, cloud_koords, BLUE, platf_koords
-from constans import max_h, numb_of_plate, foot_w, dop_h, max_dood_h, min_dood_h, text_coor
-from constans import platf_jump
+from constans import size, record_height, FPS, v, clock, cloud_koords, BLUE, platf_koords, platf_heights
+from constans import max_h, numb_of_plate, foot_w, dop_h, max_dood_h, min_dood_h, text_coor, platf_jump
 
 pygame.init()
 screen = pygame.display.set_mode(size)
@@ -58,7 +57,7 @@ doodle_size = dood_w, dood_h = 90, 60
 # главный персонаж игры
 main = Doodle()
 # класс ведет счет игры
-back = Background()
+result = Result()
 # класс, отвечающий за платформы
 plate = Platforms()
 # класс, унаследованный от класса платформ, для земли
@@ -192,7 +191,7 @@ def collis(main_pos):
             touch = True
             if not platf_jump[i]:
                 platf_jump[i] = True
-                back.new_jump()
+                result.new_jump()
     return touch
 
 
@@ -210,7 +209,7 @@ def the_game():
     else:
         screen.blit(doodle_jump, main.get_posit())
     font = pygame.font.Font(None, 20)
-    string_rendered = font.render('Счёт: {}'.format(back.result_on_game()), 1,
+    string_rendered = font.render('Счёт: {}'.format(result.result_on_game()), 1,
                                   pygame.Color('black'))
     screen.blit(string_rendered, text_coor)
     if left:
@@ -251,12 +250,22 @@ def the_end(picture_time, results='0'):
         screen.blit(big_doodle_jump, (-20, 170))
 
 
+# обновляет результаты при начале новой игры
+def update_results():
+    global main, platf_jump, platf_heights, platf_koords
+    main = Doodle()
+    platf_koords = [(0, 550)]
+    platf_jump = [True]
+
+
 # функция вызывается при начале игры
 def playing(time):
     global run, left, right
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
+        if main.check_end() and (event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN):
+            update_results()
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
                 left = True
@@ -271,7 +280,7 @@ def playing(time):
             elif pygame.mouse.get_pos()[0] > main.get_posit()[0] + 45:
                 main.right()
     if main.check_end():
-        the_end(time, back.get_result())
+        the_end(time, result.get_result())
     else:
         Cloud().change_h()
         the_game()
