@@ -240,7 +240,7 @@ def the_game():
         screen.blit(doodle_jump, main.get_posit())
     if result.result_on_game() % 8 == 0:
         class_monster.update()
-    if result.result_on_game() % 8 == 1:
+    elif result.result_on_game() % 8 == 1:
         monster_show = True
     if monster_show is True and class_monster.get_x() < width:
         screen.blit(monster, (class_monster.get_x(), class_monster.get_y()))
@@ -257,6 +257,7 @@ def the_game():
     elif right:
         main.right()
     plate_koor.change_h()
+    class_monster.down()
     check_h()
     if main.flying:
         if jump >= max_h:
@@ -272,11 +273,13 @@ def the_game():
 
 def check_h():
     if main.get_posit()[1] <= max_dood_h:
+        class_monster.allow(True)
         plate_koor.alow(True)
         main.down()
         if main.get_fly():
             main.fly()
-    if main.get_posit()[1] >= min_dood_h:
+    elif main.get_posit()[1] >= min_dood_h:
+        class_monster.allow(False)
         plate_koor.alow(False)
 
 
