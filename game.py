@@ -7,8 +7,9 @@ from Doodle import Doodle
 from cloud import Cloud
 from Board import Board
 from plate_koor import Plate_koor
-from constans import size, record_height, FPS, v, clock, cloud_koords, BLUE
-from constans import max_h, numb_of_plate, foot_w, dop_h, max_dood_h, min_dood_h, text_coor
+from Monster import Monster, monster_height
+from constans import size, record_height, FPS, v, clock, cloud_koords, BLUE, width, text_coor
+from constans import max_h, numb_of_plate, foot_w, dop_h, max_dood_h, min_dood_h
 
 pygame.init()
 screen = pygame.display.set_mode(size)
@@ -65,6 +66,8 @@ plate = Platforms()
 land = Land()
 # класс, создающий платформы при новой игре
 plate_koor = Plate_koor()
+#
+class_monster = Monster()
 # список со всеми выводимыми платформами
 platforms = [land]
 for _ in range(numb_of_plate):
@@ -85,6 +88,8 @@ left = False
 right = False
 # изменение координаты при прыжке
 jump = 0
+
+monster_show = False
 
 
 # функция прорисовки начального окна
@@ -222,7 +227,7 @@ def collis_monster_with_doodle(main_pos):
 
 # сама игра
 def the_game():
-    global doodle, doodle_jump, jump, cloud, left, right
+    global doodle, doodle_jump, jump, cloud, left, right, monster_show
     screen.fill(BLUE)
     for koor in cloud_koords:
         screen.blit(cloud, koor)
@@ -233,6 +238,16 @@ def the_game():
         screen.blit(doodle, main.get_posit())
     else:
         screen.blit(doodle_jump, main.get_posit())
+    if result.result_on_game() % 8 == 0:
+        class_monster.update()
+    if result.result_on_game() % 8 == 1:
+        monster_show = True
+    if monster_show is True and class_monster.get_x() < width:
+        screen.blit(monster, (class_monster.get_x(), class_monster.get_y()))
+        class_monster.fly()
+    else:
+        print(class_monster.get_x())
+        monster_show = False
     font = pygame.font.Font(None, 20)
     string_rendered = font.render('Счёт: {}'.format(result.result_on_game()), 1,
                                   pygame.Color('black'))
@@ -261,7 +276,7 @@ def check_h():
         main.down()
         if main.get_fly():
             main.fly()
-    if main.get_posit()[1] >= min_dood_h:        
+    if main.get_posit()[1] >= min_dood_h:
         plate_koor.alow(False)
 
 

@@ -32,3 +32,6 @@ class Result:
             text = ['Рекорд: {}'.format(self.record),
                     'Ваш результат: {}'.format(self.result)]
         return text
+
+    def collis_with_monster(self):
+        self.result = 0

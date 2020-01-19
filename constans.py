@@ -45,3 +45,4 @@ max_dood_h = 70
 dood_shift = 10
 min_dood_h = 310
 text_coor = (10, 10)
+monsters_coords = (0, 0)
