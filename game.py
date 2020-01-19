@@ -6,8 +6,9 @@ from Platforms import Platforms, Land
 from Doodle import Doodle
 from cloud import Cloud
 from Board import Board
-from constans import size, record_height, FPS, v, clock, cloud_koords, BLUE, platf_koords, platf_heights
-from constans import max_h, numb_of_plate, foot_w, dop_h, max_dood_h, min_dood_h, text_coor, platf_jump
+from plate_koor import Plate_koor
+from constans import size, record_height, FPS, v, clock, cloud_koords, BLUE
+from constans import max_h, numb_of_plate, foot_w, dop_h, max_dood_h, min_dood_h, text_coor
 
 pygame.init()
 screen = pygame.display.set_mode(size)
@@ -62,6 +63,8 @@ result = Result()
 plate = Platforms()
 # класс, унаследованный от класса платформ, для земли
 land = Land()
+# класс, создающий платформы при новой игре
+plate_koor = Plate_koor()
 # список со всеми выводимыми платформами
 platforms = [land]
 for _ in range(numb_of_plate):
@@ -175,7 +178,29 @@ def change_dood(event):
 
 
 # функция отвечает за касание главного героя с платформами
-def collis(main_pos):
+def collis_platf_with_doodle(main_pos):
+    global platforms, dood_w, dood_h, land, plate
+    platf_jump = plate_koor.pl_jump()
+    m_x, m_y = main_pos
+    touch = False
+    # проверка на пересечение с платформой
+    for i in range(numb_of_plate + 1):
+        if i == 0:
+            p = land
+        else:
+            p = plate
+        koor = plate_koor
+        if koor.get_pos(i)[1] < m_y + dood_h < koor.get_pos(i)[1] + p.get_heigh() and \
+                m_x + dood_w - foot_w > koor.get_pos(i)[0] and \
+                m_x + foot_w < koor.get_pos(i)[0] + p.get_widt():
+            touch = True
+            if not platf_jump[i]:
+                platf_jump[i] = True
+                result.new_jump()
+    return touch
+
+
+def collis_monster_with_doodle(main_pos):
     global platforms, dood_w, dood_h, land, plate, platf_jump
     m_x, m_y = main_pos
     touch = False
@@ -201,8 +226,8 @@ def the_game():
     screen.fill(BLUE)
     for koor in cloud_koords:
         screen.blit(cloud, koor)
-    screen.blit(earth, platf_koords[0])
-    for pl in platf_koords[1:]:
+    screen.blit(earth, plate_koor.pl_koor()[0])
+    for pl in plate_koor.pl_koor()[1:]:
         screen.blit(platf, pl)
     if jump == 0:
         screen.blit(doodle, main.get_posit())
@@ -216,7 +241,7 @@ def the_game():
         main.left()
     elif right:
         main.right()
-    plate.change_h()
+    plate_koor.change_h()
     check_h()
     if main.flying:
         if jump >= max_h:
@@ -224,7 +249,7 @@ def the_game():
             main.fly()
         else:
             jump += 1
-    elif collis(main.get_posit()):
+    elif collis_platf_with_doodle(main.get_posit()):
         jump = 0
         main.fly()
     main.jump()
@@ -232,12 +257,12 @@ def the_game():
 
 def check_h():
     if main.get_posit()[1] <= max_dood_h:
-        plate.alow(True)
+        plate_koor.alow(True)
         main.down()
         if main.get_fly():
             main.fly()
-    if main.get_posit()[1] >= min_dood_h:
-        plate.alow(False)
+    if main.get_posit()[1] >= min_dood_h:        
+        plate_koor.alow(False)
 
 
 # вывод окна при проигрыше
@@ -252,10 +277,10 @@ def the_end(picture_time, results='0'):
 
 # обновляет результаты при начале новой игры
 def update_results():
-    global main, platf_jump, platf_heights, platf_koords
+    global main, result
+    plate_koor.update()
     main = Doodle()
-    platf_koords = [(0, 550)]
-    platf_jump = [True]
+    result = Result()
 
 
 # функция вызывается при начале игры
@@ -275,9 +300,9 @@ def playing(time):
             left = False
             right = False
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            if pygame.mouse.get_pos()[0] < main.get_posit()[0] + 45:
+            if pygame.mouse.get_pos()[0] < main.get_posit()[0] + 40:
                 main.left()
-            elif pygame.mouse.get_pos()[0] > main.get_posit()[0] + 45:
+            elif pygame.mouse.get_pos()[0] > main.get_posit()[0] + 40:
                 main.right()
     if main.check_end():
         the_end(time, result.get_result())

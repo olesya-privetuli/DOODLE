@@ -37,19 +37,11 @@ land_h = 50
 numb_of_plate = 7
 # новая высота для платформы
 new_h = -100
-# координаты платформ
-platf_koords = [(0, 550)]
 # координата по y, на которых находятся платформы
 platf_heights = [520, 410, 300, 210, 120, 30, -60]
-for i in range(numb_of_plate):
-    platf_koords.append((random.randint(0, width - platf_width), platf_heights[i]))
 # дополнительная высота
 dop_h = 70
 max_dood_h = 70
 dood_shift = 10
 min_dood_h = 310
 text_coor = (10, 10)
-# прыгал ли герой на платформе
-platf_jump = [True]
-for _ in range(numb_of_plate):
-    platf_jump.append(False)
