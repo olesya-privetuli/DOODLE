@@ -7,10 +7,10 @@ class Platforms(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.coor = self.x, self.y = (0, 0)
 
-    def get_widt(self):
+    def get_width(self):
         return platf_width
 
-    def get_heigh(self):
+    def get_height(self):
         return pl_heigh
 
 
@@ -19,8 +19,8 @@ class Land(Platforms):
         super().__init__()
         self.coor = self.x, self.y = 0, 550
 
-    def get_widt(self):
+    def get_width(self):
         return land_w
 
-    def get_heigh(self):
+    def get_height(self):
         return land_h

@@ -123,8 +123,9 @@ def start_screen():
     global doodle, run
     intro_text = ["Нажимая клавиши 'вправо', 'влево',",
                   "перемещайте героя на платформы.",
-                  "Избегайте монстров и старайтесь не падать.",
-                  "Нажмите и выберете себе персонажа"]
+                  "Избегайте монстров, ведь они обнулят ваши результаты. ",
+                  "Старайтесь не падать.",
+                  "Нажмите и выберите себе персонажа"]
 
     dirname = os.path.dirname(__file__)
     with open(os.path.join(dirname, record_height), 'r+') as f:
@@ -183,6 +184,18 @@ def change_dood(event):
 
 
 # функция отвечает за касание главного героя с платформами
+def collis_monster_with_doodle(main_pos):
+    global platforms, dood_w, dood_h
+    m_x, m_y = main_pos
+    touch = False
+    # проверка на пересечение
+    if class_monster.get_all_coords()[1] < m_y + dood_h < class_monster.get_all_coords()[1] \
+            + monster_height and m_x + dood_w - foot_w > class_monster.get_all_coords()[0] and \
+            m_x + foot_w < class_monster.get_all_coords()[0] + monster.get_width():
+        touch = True
+    return touch
+
+
 def collis_platf_with_doodle(main_pos):
     global platforms, dood_w, dood_h, land, plate
     platf_jump = plate_koor.pl_jump()
@@ -195,29 +208,9 @@ def collis_platf_with_doodle(main_pos):
         else:
             p = plate
         koor = plate_koor
-        if koor.get_pos(i)[1] < m_y + dood_h < koor.get_pos(i)[1] + p.get_heigh() and \
+        if koor.get_pos(i)[1] < m_y + dood_h < koor.get_pos(i)[1] + p.get_height() and \
                 m_x + dood_w - foot_w > koor.get_pos(i)[0] and \
-                m_x + foot_w < koor.get_pos(i)[0] + p.get_widt():
-            touch = True
-            if not platf_jump[i]:
-                platf_jump[i] = True
-                result.new_jump()
-    return touch
-
-
-def collis_monster_with_doodle(main_pos):
-    global platforms, dood_w, dood_h, land, plate, platf_jump
-    m_x, m_y = main_pos
-    touch = False
-    # проверка на пересечение с платформой
-    for i in range(numb_of_plate + 1):
-        if i == 0:
-            p = land
-        else:
-            p = plate
-        if p.get_pos(i)[1] < m_y + dood_h < p.get_pos(i)[1] + p.get_heigh() and \
-                m_x + dood_w - foot_w > p.get_pos(i)[0] and \
-                m_x + foot_w < p.get_pos(i)[0] + p.get_widt():
+                m_x + foot_w < koor.get_pos(i)[0] + p.get_width():
             touch = True
             if not platf_jump[i]:
                 platf_jump[i] = True
@@ -246,7 +239,6 @@ def the_game():
         screen.blit(monster, (class_monster.get_x(), class_monster.get_y()))
         class_monster.fly()
     else:
-        print(class_monster.get_x())
         monster_show = False
     font = pygame.font.Font(None, 20)
     string_rendered = font.render('Счёт: {}'.format(result.result_on_game()), 1,
@@ -268,6 +260,8 @@ def the_game():
     elif collis_platf_with_doodle(main.get_posit()):
         jump = 0
         main.fly()
+    elif collis_monster_with_doodle(main.get_posit()):
+        result.collis_with_monster()
     main.jump()
 
 
