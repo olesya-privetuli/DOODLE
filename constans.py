@@ -41,9 +41,9 @@ new_h = -100
 platf_heights = [520, 410, 300, 210, 120, 30, -60]
 # дополнительная высота
 dop_h = 70
-max_dood_h = 90
+max_dood_h = 100
 dood_shift = 10
-min_dood_h = 320
+min_dood_h = 300
 text_coor = (10, 10)
 monsters_coords = (0, 0)
 monster_start = 200

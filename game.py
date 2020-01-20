@@ -92,6 +92,13 @@ jump = 0
 monster_show = False
 
 
+def picture_big_doodle(time):
+    if int(time % 2) == 0:
+        screen.blit(big_doodle, (-20, 170))
+    else:
+        screen.blit(big_doodle_jump, (-20, 170))
+
+
 # функция прорисовки начального окна
 def start_pictures(fon, text, record=-5, font_num=20):
     screen.blit(fon, (0, 0))
@@ -148,10 +155,7 @@ def start_screen():
                         start = 2
             if start == 0:
                 start_pictures(fon, intro_text, record)
-                if int(time_picture % 2) == 0:
-                    screen.blit(big_doodle, (-20, 170))
-                else:
-                    screen.blit(big_doodle_jump, (-20, 170))
+                picture_big_doodle(time_picture)
             else:
                 choice(time_picture)
         else:
@@ -281,10 +285,7 @@ def check_h():
 def the_end(picture_time, results='0'):
     fon = pygame.transform.scale(load_image('fon.jpg'), size)
     start_pictures(fon, results, -5, 40)
-    if int(picture_time % 2) == 0:
-        screen.blit(big_doodle, (-20, 170))
-    else:
-        screen.blit(big_doodle_jump, (-20, 170))
+    picture_big_doodle(picture_time)
 
 
 # обновляет результаты при начале новой игры
