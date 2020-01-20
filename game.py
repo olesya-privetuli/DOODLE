@@ -202,6 +202,10 @@ def collis_monster_with_doodle(main_pos):
             + monster_height and m_x + dood_w - foot_w > class_monster.get_all_coords()[0] and \
             m_x + foot_w < class_monster.get_all_coords()[0] + monster.get_width():
         touch = True
+    elif class_monster.get_all_coords()[1] < m_y < class_monster.get_all_coords()[1] \
+            + monster_height and m_x + dood_w - foot_w > class_monster.get_all_coords()[0] and \
+            m_x + foot_w < class_monster.get_all_coords()[0] + monster.get_width():
+        touch = True
     return touch
 
 
