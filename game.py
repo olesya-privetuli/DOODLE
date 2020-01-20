@@ -92,6 +92,7 @@ jump = 0
 monster_show = False
 
 
+# функция отвечает за вывод картинки персонажа в начальном и конечном окне
 def picture_big_doodle(time):
     if int(time % 2) == 0:
         screen.blit(big_doodle, (-20, 170))
@@ -126,6 +127,7 @@ def terminate():
     sys.exit()
 
 
+# вывод начального окна
 def start_screen():
     global doodle, run
     intro_text = ["Нажимая клавиши 'вправо', 'влево',",
@@ -165,6 +167,7 @@ def start_screen():
         clock.tick(FPS)
 
 
+# функция для выбора персонажа
 def choice(time):
     global doodles, doodles_jump
     screen.fill(BLUE)
@@ -175,11 +178,13 @@ def choice(time):
             draw_doodle(doodles_jump[i], i)
 
 
+# прорисовка всех картинок персонажей в окне выбора персонажа
 def draw_doodle(name, i):
     screen.blit(pygame.transform.scale(name, (270, 180)),
                 (Board().render()[i][0], Board().render()[i][1] + dop_h))
 
 
+# занесение в переменную картинки главного героя выбранного персонажа
 def change_dood(event):
     global doodles, doodles_jump, doodle, doodle_jump
     num = Board().picture(event.pos)
@@ -187,7 +192,7 @@ def change_dood(event):
     doodle_jump = pygame.transform.scale(doodles_jump[num], (90, 60))
 
 
-# функция отвечает за касание главного героя с платформами
+# функция отвечает за касание главного героя с "монстром"
 def collis_monster_with_doodle(main_pos):
     global platforms, dood_w, dood_h
     m_x, m_y = main_pos
@@ -200,6 +205,7 @@ def collis_monster_with_doodle(main_pos):
     return touch
 
 
+# функция отвечает за касание главного героя с платформами
 def collis_platf_with_doodle(main_pos):
     global platforms, dood_w, dood_h, land, plate
     platf_jump = plate_koor.pl_jump()
@@ -269,6 +275,7 @@ def the_game():
     main.jump()
 
 
+# перемещение платформ вниз
 def check_h():
     if main.get_posit()[1] <= max_dood_h:
         class_monster.allow(True)
@@ -285,6 +292,8 @@ def check_h():
 def the_end(picture_time, results='0'):
     fon = pygame.transform.scale(load_image('fon.jpg'), size)
     start_pictures(fon, results, -5, 40)
+    font = pygame.font.Font(None, 30)
+    screen.blit(font.render('Нажмите, чтобы начать заново', 1, (0, 0, 0)), (70, 550))
     picture_big_doodle(picture_time)
 
 
