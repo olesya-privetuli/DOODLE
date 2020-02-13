@@ -1,10 +1,8 @@
-import pygame
 from constans import dood_w, width, jump_h, dood_shift, height, dood_h
 
 
-class Doodle(pygame.sprite.Sprite):
+class Doodle:
     def __init__(self):
-        pygame.sprite.Sprite.__init__(self)
         self.coor = (self.x, self.y) = (210, 500)
         self.height = jump_h
         self.flying = True

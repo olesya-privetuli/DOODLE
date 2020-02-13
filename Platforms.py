@@ -1,10 +1,8 @@
-import pygame
 from constans import platf_width, pl_heigh, land_w, land_h
 
 
-class Platforms(pygame.sprite.Sprite):
+class Platforms:
     def __init__(self):
-        pygame.sprite.Sprite.__init__(self)
         self.coor = self.x, self.y = (0, 0)
 
     def get_width(self):

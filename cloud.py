@@ -1,4 +1,4 @@
-from constans import all_speeds, cloud_koords
+from constans import all_speeds, cloud_coords
 
 
 class Cloud:
@@ -6,9 +6,9 @@ class Cloud:
         self.width, self.height = 500, 600
 
     def change_h(self):
-        for i in range(len(cloud_koords)):
-            if cloud_koords[i][1] <= self.height:
-                new_y = cloud_koords[i][1] + all_speeds[cloud_koords.index(cloud_koords[i])]
-                cloud_koords[i] = cloud_koords[i][0], new_y
+        for i in range(len(cloud_coords)):
+            if cloud_coords[i][1] <= self.height:
+                new_y = cloud_coords[i][1] + all_speeds[cloud_coords.index(cloud_coords[i])]
+                cloud_coords[i] = cloud_coords[i][0], new_y
             else:
-                cloud_koords[i] = cloud_koords[i][0], -30
+                cloud_coords[i] = cloud_coords[i][0], -30

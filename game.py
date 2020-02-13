@@ -6,9 +6,9 @@ from Platforms import Platforms, Land
 from Doodle import Doodle
 from cloud import Cloud
 from Board import Board
-from plate_koor import Plate_koor
+from plate_coor import Plate_coor
 from Monster import Monster, monster_height
-from constans import size, record_height, FPS, v, clock, cloud_koords, BLUE, width, text_coor
+from constans import size, record_height, FPS, v, clock, cloud_coords, BLUE, width, text_coor
 from constans import max_h, numb_of_plate, foot_w, dop_h, max_dood_h, min_dood_h
 
 pygame.init()
@@ -65,7 +65,7 @@ plate = Platforms()
 # класс, унаследованный от класса платформ, для земли
 land = Land()
 # класс, создающий платформы при новой игре
-plate_koor = Plate_koor()
+plate_coor = Plate_coor()
 #
 class_monster = Monster()
 # список со всеми выводимыми платформами
@@ -78,8 +78,6 @@ pygame.mixer.init()
 pygame.mixer.music.load('music.mp3')
 pygame.mixer.music.play(-1)
 
-all_sprites = pygame.sprite.Group()
-all_sprites.add(main)
 # вывод окна
 run = True
 # зажатии клавиши влево
@@ -212,7 +210,7 @@ def collis_monster_with_doodle(main_pos):
 # функция отвечает за касание главного героя с платформами
 def collis_platf_with_doodle(main_pos):
     global platforms, dood_w, dood_h, land, plate
-    platf_jump = plate_koor.pl_jump()
+    platf_jump = plate_coor.pl_jump()
     m_x, m_y = main_pos
     touch = False
     # проверка на пересечение с платформой
@@ -221,10 +219,10 @@ def collis_platf_with_doodle(main_pos):
             p = land
         else:
             p = plate
-        koor = plate_koor
-        if koor.get_pos(i)[1] < m_y + dood_h < koor.get_pos(i)[1] + p.get_height() and \
-                m_x + dood_w - foot_w > koor.get_pos(i)[0] and \
-                m_x + foot_w < koor.get_pos(i)[0] + p.get_width():
+        coor = plate_coor
+        if coor.get_pos(i)[1] < m_y + dood_h < coor.get_pos(i)[1] + p.get_height() and \
+                m_x + dood_w - foot_w > coor.get_pos(i)[0] and \
+                m_x + foot_w < coor.get_pos(i)[0] + p.get_width():
             touch = True
             if not platf_jump[i]:
                 platf_jump[i] = True
@@ -236,10 +234,10 @@ def collis_platf_with_doodle(main_pos):
 def the_game():
     global doodle, doodle_jump, jump, cloud, left, right, monster_show
     screen.fill(BLUE)
-    for koor in cloud_koords:
-        screen.blit(cloud, koor)
-    screen.blit(earth, plate_koor.pl_koor()[0])
-    for pl in plate_koor.pl_koor()[1:]:
+    for coor in cloud_coords:
+        screen.blit(cloud, coor)
+    screen.blit(earth, plate_coor.pl_coor()[0])
+    for pl in plate_coor.pl_coor()[1:]:
         screen.blit(platf, pl)
     if jump == 0:
         screen.blit(doodle, main.get_posit())
@@ -262,7 +260,7 @@ def the_game():
         main.left()
     elif right:
         main.right()
-    plate_koor.change_h()
+    plate_coor.change_h()
     class_monster.down()
     check_h()
     if main.flying:
@@ -283,13 +281,13 @@ def the_game():
 def check_h():
     if main.get_posit()[1] <= max_dood_h:
         class_monster.allow(True)
-        plate_koor.alow(True)
+        plate_coor.alow(True)
         main.down()
         if main.get_fly():
             main.fly()
     elif main.get_posit()[1] >= min_dood_h:
         class_monster.allow(False)
-        plate_koor.alow(False)
+        plate_coor.alow(False)
 
 
 # вывод окна при проигрыше
@@ -304,7 +302,7 @@ def the_end(picture_time, results='0'):
 # обновляет результаты при начале новой игры
 def update_results():
     global main, result
-    plate_koor.update()
+    plate_coor.update()
     main = Doodle()
     result = Result()
 
