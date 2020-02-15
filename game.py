@@ -292,11 +292,11 @@ def check_h():
         class_monster.allow(True)
         plate_coor.alow(True)
         main.down()
-    """if main.get_fly():
+        if main.get_fly():
             main.fly()
     elif main.get_posit()[1] >= min_dood_h:
         class_monster.allow(False)
-        plate_coor.alow(False)"""
+        plate_coor.alow(False)
 
 
 # вывод окна при проигрыше
