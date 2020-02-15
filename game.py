@@ -73,6 +73,9 @@ platforms = [land]
 for _ in range(numb_of_plate):
     platforms.append(plate)
 
+# состояние персонажа
+fall = False
+
 # Загрузка звука прыжка
 pygame.mixer.init()
 pygame.mixer.music.load('music.mp3')
@@ -169,11 +172,13 @@ def start_screen():
 def choice(time):
     global doodles, doodles_jump
     screen.fill(BLUE)
+    draw_cloud()
     for i in range(len(doodles)):
         if int(time % 2) == 0:
             draw_doodle(doodles[i], i)
         else:
             draw_doodle(doodles_jump[i], i)
+    Cloud().change_h()
 
 
 # прорисовка всех картинок персонажей в окне выбора персонажа
@@ -230,12 +235,16 @@ def collis_platf_with_doodle(main_pos):
     return touch
 
 
-# сама игра
-def the_game():
-    global doodle, doodle_jump, jump, cloud, left, right, monster_show
-    screen.fill(BLUE)
+def draw_cloud():
     for coor in cloud_coords:
         screen.blit(cloud, coor)
+
+
+# сама игра
+def the_game():
+    global doodle, doodle_jump, jump, left, right, monster_show
+    screen.fill(BLUE)
+    draw_cloud()
     screen.blit(earth, plate_coor.pl_coor()[0])
     for pl in plate_coor.pl_coor()[1:]:
         screen.blit(platf, pl)
@@ -279,15 +288,15 @@ def the_game():
 
 # перемещение платформ вниз
 def check_h():
-    if main.get_posit()[1] <= max_dood_h:
+    if main.get_posit()[1] <= max_dood_h and not fall:
         class_monster.allow(True)
         plate_coor.alow(True)
         main.down()
-        if main.get_fly():
+    """if main.get_fly():
             main.fly()
     elif main.get_posit()[1] >= min_dood_h:
         class_monster.allow(False)
-        plate_coor.alow(False)
+        plate_coor.alow(False)"""
 
 
 # вывод окна при проигрыше
