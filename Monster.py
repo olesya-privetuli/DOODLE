@@ -1,9 +1,5 @@
 from random import randint
-from constans import monster_start
-
-height = 600
-monster_height = 60
-plate_height = 200
+from constans import monster_start, monster_height
 
 
 class Monster:

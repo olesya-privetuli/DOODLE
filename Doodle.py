@@ -9,7 +9,7 @@ class Doodle:
 
     def jump(self):
         if self.flying:
-            self.y += self.height
+            self.y += 0.9 * self.height
         else:
             self.y -= 1.4 * self.height
         self.coor = (self.x, self.y)

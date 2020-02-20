@@ -47,3 +47,4 @@ min_dood_h = 300
 text_coor = (10, 10)
 monsters_coords = (0, 0)
 monster_start = 200
+monster_height = 60

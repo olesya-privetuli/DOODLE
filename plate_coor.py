@@ -1,5 +1,6 @@
 from random import randint
-from constans import numb_of_plate, width, platf_width, platf_heights, height, new_h
+from constans import numb_of_plate, width, platf_width, platf_heights, height, new_h, pl_heigh
+from constans import land_w, land_h
 
 
 class Plate_coor:
@@ -43,3 +44,26 @@ class Plate_coor:
 
     def alow(self, log):
         self.dow = log
+
+
+class Platforms:
+    def __init__(self):
+        self.coor = self.x, self.y = 0, 0
+
+    def get_width(self):
+        return platf_width
+
+    def get_height(self):
+        return pl_heigh
+
+
+class Land(Platforms):
+    def __init__(self):
+        super().__init__()
+        self.y = 0, 550
+
+    def get_width(self):
+        return land_w
+
+    def get_height(self):
+        return land_h

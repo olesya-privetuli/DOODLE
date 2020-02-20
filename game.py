@@ -2,14 +2,13 @@ import pygame
 import os
 import sys
 from Result import Result
-from Platforms import Platforms, Land
+from plate_coor import Plate_coor, Platforms, Land
 from Doodle import Doodle
 from cloud import Cloud
 from Board import Board
-from plate_coor import Plate_coor
-from Monster import Monster, monster_height
+from Monster import Monster
 from constans import size, record_height, FPS, v, clock, cloud_coords, BLUE, width, text_coor
-from constans import max_h, numb_of_plate, foot_w, dop_h, max_dood_h, min_dood_h
+from constans import max_h, numb_of_plate, foot_w, dop_h, max_dood_h, min_dood_h, monster_height
 
 pygame.init()
 screen = pygame.display.set_mode(size)
@@ -281,7 +280,7 @@ def the_game():
     elif collis_platf_with_doodle(main.get_posit()):
         jump = 0
         main.fly()
-    elif collis_monster_with_doodle(main.get_posit()):
+    if collis_monster_with_doodle(main.get_posit()):
         result.collis_with_monster()
     main.jump()
 
