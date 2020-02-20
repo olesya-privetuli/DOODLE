@@ -2,7 +2,7 @@ import pygame
 import os
 import sys
 from Result import Result
-from plate_coor import Plate_coor, Platforms, Land
+from Platforms import Plate_coor, Platforms, Land
 from Doodle import Doodle
 from cloud import Cloud
 from Board import Board
